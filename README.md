@@ -22,7 +22,7 @@ public void ConfigureServices(IServiceCollection services)
 
 ## Usage
 
-```csharp
+```razor
 <MediaQuery Query="(min-width: 768px)"> // Supports standard CSS media queries
     This is visible at widths greater than 768px
 </MediaQuery>
