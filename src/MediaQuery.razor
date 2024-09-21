@@ -1,0 +1,87 @@
+@using System.Threading
+@using Microsoft.Extensions.Logging
+@using Microsoft.JSInterop
+@using Soenneker.Blazor.MediaQuery.Abstract
+@using Soenneker.Extensions.String
+
+@implements IMediaQuery
+@inject IMediaQueryInterop MediaQueryInterop
+@inject ILogger<MediaQuery> _logger
+
+<div id="@_elementId" >
+    @if (_matches)
+    {
+        @ChildContent
+    }
+</div>
+
+@code {
+
+    [EditorRequired]
+    [Parameter]
+    public string Query { get; set; } = default!;
+
+    [Parameter]
+    public RenderFragment ChildContent { get; set; } = default!;
+
+    private bool _matches;
+    private bool _previousMatches;
+
+    private DotNetObjectReference<MediaQuery>? _objRef;
+
+    private CancellationTokenSource _cTs;
+    private string _elementId;
+
+    public MediaQuery()
+    {
+        _elementId = '_' + Guid.NewGuid().ToString();
+        _cTs = new CancellationTokenSource();
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        Query.ThrowIfNullOrWhitespace();
+
+        await MediaQueryInterop.Initialize(_cTs.Token);
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            _objRef = DotNetObjectReference.Create(this);
+
+            await MediaQueryInterop.Create(_objRef, _elementId, Query, _cTs.Token);
+            await MediaQueryInterop.CreateObserver(_elementId, _cTs.Token);
+        }
+    }
+
+    protected override bool ShouldRender()
+    {
+        return _matches != _previousMatches;
+    }
+
+    public async ValueTask<bool> IsMediaQueryMatched(string query)
+    {
+        return await MediaQueryInterop.IsMediaQueryMatched(query, _cTs.Token);
+    }
+
+    [JSInvokable]
+    public void UpdateMatches(bool match)
+    {
+        if (_matches == match)
+            return;
+
+        _previousMatches = _matches;
+        _matches = match;
+        StateHasChanged();
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        await _cTs.CancelAsync();
+
+        _objRef?.Dispose();
+    }
+
+}
