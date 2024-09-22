@@ -57,8 +57,8 @@ public class MediaQueryInterop : IMediaQueryInterop
     {
         GC.SuppressFinalize(this);
 
-        await _resourceLoader.DisposeModule("Soenneker.Blazor.MediaQuery/mediaqueryinterop.js");
+        await _resourceLoader.DisposeModule("Soenneker.Blazor.MediaQuery/mediaqueryinterop.js").NoSync();
 
-        await _scriptInitializer.DisposeAsync();
+        await _scriptInitializer.DisposeAsync().NoSync();
     }
 }
