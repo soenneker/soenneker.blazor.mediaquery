@@ -3,7 +3,7 @@
 [![](https://img.shields.io/nuget/dt/soenneker.blazor.mediaquery.svg?style=for-the-badge)](https://www.nuget.org/packages/soenneker.blazor.mediaquery/)
 
 # ![](https://user-images.githubusercontent.com/4441470/224455560-91ed3ee7-f510-4041-a8d2-3fc093025112.png) Soenneker.Blazor.MediaQuery
-### A Blazor interop library for media queries for viewport size logic
+### A Blazor interop library for media queries and viewport size logic
 
 ## Installation
 
@@ -11,7 +11,7 @@
 dotnet add package Soenneker.Blazor.MediaQuery
 ```
 
-### Add the following to your `Startup.cs` file
+### Register with `IServiceCollection`:
 
 ```csharp
 public void ConfigureServices(IServiceCollection services)
