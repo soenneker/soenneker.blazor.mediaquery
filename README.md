@@ -11,7 +11,7 @@
 dotnet add package Soenneker.Blazor.MediaQuery
 ```
 
-### Register MediaQuery with `IServiceCollection`:
+### Register with `IServiceCollection`:
 
 ```csharp
 public void ConfigureServices(IServiceCollection services)
