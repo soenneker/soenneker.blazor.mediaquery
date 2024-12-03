@@ -45,6 +45,6 @@
         <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="9.0.0" />
         <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="9.0.0" />
         <PackageReference Include="Soenneker.Blazor.Utils.ResourceLoader" Version="3.0.632" />
-        <PackageReference Include="Soenneker.Extensions.String" Version="3.0.274" />
+        <PackageReference Include="Soenneker.Extensions.String" Version="3.0.279" />
     </ItemGroup>
 </Project>
