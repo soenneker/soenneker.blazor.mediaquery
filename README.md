@@ -16,7 +16,7 @@ dotnet add package Soenneker.Blazor.MediaQuery
 ```csharp
 public void ConfigureServices(IServiceCollection services)
 {
-    services.AddMediaQuery();
+    services.AddMediaQueryInteropAsScoped();
 }
 ```
 

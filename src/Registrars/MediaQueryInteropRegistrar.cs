@@ -13,9 +13,11 @@ public static class MediaQueryInteropRegistrar
     /// <summary>
     /// Adds <see cref="IMediaQuery"/> as a scoped service. <para/>
     /// </summary>
-    public static void AddMediaQuery(this IServiceCollection services)
+    public static IServiceCollection AddMediaQueryInteropAsScoped(this IServiceCollection services)
     {
-        services.AddResourceLoader();
+        services.AddResourceLoaderAsScoped();
         services.TryAddScoped<IMediaQueryInterop, MediaQueryInterop>();
+
+        return services;
     }
 }

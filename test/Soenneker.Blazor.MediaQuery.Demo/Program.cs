@@ -31,7 +31,7 @@ public class Program
                 BaseAddress = new Uri(builder.HostEnvironment.BaseAddress)
             });
 
-            builder.Services.AddMediaQuery();
+            builder.Services.AddMediaQueryInteropAsScoped();
 
             WebAssemblyHost host = builder.Build();
 

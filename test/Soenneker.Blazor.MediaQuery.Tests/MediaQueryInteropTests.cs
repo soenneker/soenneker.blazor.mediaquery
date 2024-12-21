@@ -8,10 +8,16 @@ namespace Soenneker.Blazor.MediaQuery.Tests;
 [Collection("Collection")]
 public class MediaQueryInteropTests : FixturedUnitTest
 {
-    private readonly IMediaQueryInterop _interop;
+    private readonly IMediaQueryInterop _util;
 
     public MediaQueryInteropTests(Fixture fixture, ITestOutputHelper output) : base(fixture, output)
     {
-        _interop = Resolve<IMediaQueryInterop>(true);
+        _util = Resolve<IMediaQueryInterop>(true);
+    }
+
+    [Fact]
+    public void Default()
+    {
+
     }
 }

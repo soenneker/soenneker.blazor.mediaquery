@@ -24,7 +24,7 @@ public class MediaQueryInterop : IMediaQueryInterop
 
         _scriptInitializer = new AsyncSingleton<object>(async (token, _) =>
         {
-            await _resourceLoader.ImportModuleAndWaitUntilAvailable("Soenneker.Blazor.MediaQuery/mediaqueryinterop.js", "MediaQueryInterop", 100, token);
+            await _resourceLoader.ImportModuleAndWaitUntilAvailable("Soenneker.Blazor.MediaQuery/mediaqueryinterop.js", "MediaQueryInterop", 100, token).NoSync();
             return new object();
         });
     }
