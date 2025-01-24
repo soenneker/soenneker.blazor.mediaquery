@@ -38,19 +38,19 @@ public class MediaQueryInterop : IMediaQueryInterop
     {
         _ = await _scriptInitializer.Get(cancellationToken).NoSync();
 
-        await _jsRuntime.InvokeVoidAsync("MediaQueryInterop.addMediaQueryListener", cancellationToken, dotnetObj, elementId, query);
+        await _jsRuntime.InvokeVoidAsync("MediaQueryInterop.addMediaQueryListener", cancellationToken, dotnetObj, elementId, query).NoSync();
     }
 
     public async ValueTask CreateObserver(string elementId, CancellationToken cancellationToken = default)
     {
-        await _jsRuntime.InvokeVoidAsync("MediaQueryInterop.createObserver", cancellationToken, elementId);
+        await _jsRuntime.InvokeVoidAsync("MediaQueryInterop.createObserver", cancellationToken, elementId).NoSync();
     }
 
     public async ValueTask<bool> IsMediaQueryMatched(string query, CancellationToken cancellationToken = default)
     {
         _ = await _scriptInitializer.Get(cancellationToken).NoSync();
 
-        return await _jsRuntime.InvokeAsync<bool>("MediaQueryInterop.isMediaQueryMatched", cancellationToken, query);
+        return await _jsRuntime.InvokeAsync<bool>("MediaQueryInterop.isMediaQueryMatched", cancellationToken, query).NoSync();
     }
 
     public async ValueTask DisposeAsync()

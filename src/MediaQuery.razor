@@ -3,6 +3,8 @@
 @using Microsoft.JSInterop
 @using Soenneker.Blazor.MediaQuery.Abstract
 @using Soenneker.Extensions.String
+@using Soenneker.Extensions.Task
+@using Soenneker.Extensions.ValueTask
 
 @implements IMediaQuery
 @inject IMediaQueryInterop MediaQueryInterop
@@ -40,9 +42,9 @@
 
     protected override async Task OnInitializedAsync()
     {
-        Query.ThrowIfNullOrWhitespace();
+        Query.ThrowIfNullOrWhiteSpace();
 
-        await MediaQueryInterop.Initialize(_cTs.Token);
+        await MediaQueryInterop.Initialize(_cTs.Token).NoSync();
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -51,8 +53,8 @@
         {
             _objRef = DotNetObjectReference.Create(this);
 
-            await MediaQueryInterop.Create(_objRef, _elementId, Query, _cTs.Token);
-            await MediaQueryInterop.CreateObserver(_elementId, _cTs.Token);
+            await MediaQueryInterop.Create(_objRef, _elementId, Query, _cTs.Token).NoSync();
+            await MediaQueryInterop.CreateObserver(_elementId, _cTs.Token).NoSync();
         }
     }
 
@@ -63,7 +65,7 @@
 
     public async ValueTask<bool> IsMediaQueryMatched(string query)
     {
-        return await MediaQueryInterop.IsMediaQueryMatched(query, _cTs.Token);
+        return await MediaQueryInterop.IsMediaQueryMatched(query, _cTs.Token).NoSync();
     }
 
     [JSInvokable]
@@ -79,7 +81,7 @@
 
     public async ValueTask DisposeAsync()
     {
-        await _cTs.CancelAsync();
+        await _cTs.CancelAsync().NoSync();
 
         _objRef?.Dispose();
     }
