@@ -1,4 +1,4 @@
-# Contributing to Soenneker.Blazor.MediaQuery
+﻿# Contributing to Soenneker.Blazor.MediaQuery
 
 We're excited that you're interested in contributing!
 
