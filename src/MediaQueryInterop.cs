@@ -10,7 +10,7 @@ using System;
 namespace Soenneker.Blazor.MediaQuery;
 
 /// <inheritdoc cref="IMediaQueryInterop"/>
-public class MediaQueryInterop : IMediaQueryInterop
+public sealed class MediaQueryInterop : IMediaQueryInterop
 {
     private readonly IJSRuntime _jsRuntime;
     private readonly IResourceLoader _resourceLoader;
@@ -55,8 +55,6 @@ public class MediaQueryInterop : IMediaQueryInterop
 
     public async ValueTask DisposeAsync()
     {
-        GC.SuppressFinalize(this);
-
         await _resourceLoader.DisposeModule("Soenneker.Blazor.MediaQuery/mediaqueryinterop.js").NoSync();
 
         await _scriptInitializer.DisposeAsync().NoSync();
