@@ -1,14 +1,13 @@
 @using System.Threading
-@using Microsoft.Extensions.Logging
 @using Microsoft.JSInterop
 @using Soenneker.Blazor.MediaQuery.Abstract
 @using Soenneker.Extensions.String
-@using Soenneker.Extensions.Task
 @using Soenneker.Extensions.ValueTask
+@using Soenneker.Extensions.CancellationTokens
 
+@inherits Soenneker.Quark.Components.Cancellable.CancellableComponent
 @implements IMediaQuery
 @inject IMediaQueryInterop MediaQueryInterop
-@inject ILogger<MediaQuery> _logger
 
 <div id="@_elementId" >
     @if (_matches)
@@ -31,20 +30,18 @@
 
     private DotNetObjectReference<MediaQuery>? _objRef;
 
-    private CancellationTokenSource _cTs;
-    private string _elementId;
+    private readonly string _elementId;
 
     public MediaQuery()
     {
         _elementId = '_' + Guid.NewGuid().ToString();
-        _cTs = new CancellationTokenSource();
     }
 
     protected override async Task OnInitializedAsync()
     {
         Query.ThrowIfNullOrWhiteSpace();
 
-        await MediaQueryInterop.Initialize(_cTs.Token).NoSync();
+        await MediaQueryInterop.Initialize(CancellationToken).NoSync();
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -53,8 +50,8 @@
         {
             _objRef = DotNetObjectReference.Create(this);
 
-            await MediaQueryInterop.Create(_objRef, _elementId, Query, _cTs.Token).NoSync();
-            await MediaQueryInterop.CreateObserver(_elementId, _cTs.Token).NoSync();
+            await MediaQueryInterop.Create(_objRef, _elementId, Query, CancellationToken).NoSync();
+            await MediaQueryInterop.CreateObserver(_elementId, CancellationToken).NoSync();
         }
     }
 
@@ -63,9 +60,14 @@
         return _matches != _previousMatches;
     }
 
-    public async ValueTask<bool> IsMediaQueryMatched(string query)
+    public async ValueTask<bool> IsMediaQueryMatched(string query, CancellationToken cancellationToken = default)
     {
-        return await MediaQueryInterop.IsMediaQueryMatched(query, _cTs.Token).NoSync();
+        CancellationToken linked = CancellationToken.Link(cancellationToken, out CancellationTokenSource? cts);
+
+        using (cts)
+        {
+            return await MediaQueryInterop.IsMediaQueryMatched(query, linked).NoSync();
+        }
     }
 
     [JSInvokable]
@@ -79,9 +81,9 @@
         StateHasChanged();
     }
 
-    public async ValueTask DisposeAsync()
+    public override async ValueTask DisposeAsync()
     {
-        await _cTs.CancelAsync().NoSync();
+        await base.DisposeAsync().NoSync();
 
         _objRef?.Dispose();
     }

@@ -15,8 +15,7 @@ public static class MediaQueryInteropRegistrar
     /// </summary>
     public static IServiceCollection AddMediaQueryInteropAsScoped(this IServiceCollection services)
     {
-        services.AddResourceLoaderAsScoped();
-        services.TryAddScoped<IMediaQueryInterop, MediaQueryInterop>();
+        services.AddResourceLoaderAsScoped().TryAddScoped<IMediaQueryInterop, MediaQueryInterop>();
 
         return services;
     }

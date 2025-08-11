@@ -5,7 +5,6 @@ using Soenneker.Blazor.Utils.ResourceLoader.Abstract;
 using Soenneker.Utils.AsyncSingleton;
 using System.Threading;
 using Soenneker.Extensions.ValueTask;
-using System;
 
 namespace Soenneker.Blazor.MediaQuery;
 
