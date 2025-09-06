@@ -41,7 +41,7 @@
     {
         Query.ThrowIfNullOrWhiteSpace();
 
-        await MediaQueryInterop.Initialize(CancellationToken).NoSync();
+        await MediaQueryInterop.Initialize(CancellationToken);
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -50,8 +50,8 @@
         {
             _objRef = DotNetObjectReference.Create(this);
 
-            await MediaQueryInterop.Create(_objRef, _elementId, Query, CancellationToken).NoSync();
-            await MediaQueryInterop.CreateObserver(_elementId, CancellationToken).NoSync();
+            await MediaQueryInterop.Create(_objRef, _elementId, Query, CancellationToken);
+            await MediaQueryInterop.CreateObserver(_elementId, CancellationToken);
         }
     }
 
@@ -66,7 +66,7 @@
 
         using (cts)
         {
-            return await MediaQueryInterop.IsMediaQueryMatched(query, linked).NoSync();
+            return await MediaQueryInterop.IsMediaQueryMatched(query, linked);
         }
     }
 
@@ -83,7 +83,7 @@
 
     public override async ValueTask DisposeAsync()
     {
-        await base.DisposeAsync().NoSync();
+        await base.DisposeAsync();
 
         _objRef?.Dispose();
     }
