@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace Soenneker.Blazor.MediaQuery.Abstract;
 
-public interface IMediaQuery : IAsyncDisposable
+public interface IMediaQuery : ICancellableElement
 {
     /// <summary>
     /// Asynchronously checks if the specified media query matches the current viewport.

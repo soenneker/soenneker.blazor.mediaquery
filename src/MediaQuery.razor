@@ -2,10 +2,9 @@
 @using Microsoft.JSInterop
 @using Soenneker.Blazor.MediaQuery.Abstract
 @using Soenneker.Extensions.String
-@using Soenneker.Extensions.ValueTask
 @using Soenneker.Extensions.CancellationTokens
 
-@inherits Soenneker.Quark.Components.Cancellable.CancellableComponent
+@inherits Soenneker.Quark.Components.Cancellable.CancellableElement
 @implements IMediaQuery
 @inject IMediaQueryInterop MediaQueryInterop
 
@@ -21,9 +20,6 @@
     [EditorRequired]
     [Parameter]
     public string Query { get; set; } = null!;
-
-    [Parameter]
-    public RenderFragment ChildContent { get; set; } = null!;
 
     private bool _matches;
     private bool _previousMatches;
