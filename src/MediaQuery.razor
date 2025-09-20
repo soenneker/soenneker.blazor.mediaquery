@@ -4,11 +4,11 @@
 @using Soenneker.Extensions.String
 @using Soenneker.Extensions.CancellationTokens
 
-@inherits Soenneker.Quark.Components.Cancellable.CancellableElement
+@inherits Soenneker.Quark.Components.Core.Cancellable.CoreCancellableElement
 @implements IMediaQuery
 @inject IMediaQueryInterop MediaQueryInterop
 
-<div id="@_elementId" >
+<div id="@Id" >
     @if (_matches)
     {
         @ChildContent
@@ -26,11 +26,9 @@
 
     private DotNetObjectReference<MediaQuery>? _objRef;
 
-    private readonly string _elementId;
-
     public MediaQuery()
     {
-        _elementId = '_' + Guid.NewGuid().ToString();
+        Id = '_' + Guid.NewGuid().ToString();
     }
 
     protected override async Task OnInitializedAsync()
@@ -46,8 +44,8 @@
         {
             _objRef = DotNetObjectReference.Create(this);
 
-            await MediaQueryInterop.Create(_objRef, _elementId, Query, CancellationToken);
-            await MediaQueryInterop.CreateObserver(_elementId, CancellationToken);
+            await MediaQueryInterop.Create(_objRef, Id!, Query, CancellationToken);
+            await MediaQueryInterop.CreateObserver(Id!, CancellationToken);
         }
     }
 
