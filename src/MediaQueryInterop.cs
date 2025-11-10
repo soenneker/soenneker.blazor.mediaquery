@@ -15,6 +15,9 @@ public sealed class MediaQueryInterop : IMediaQueryInterop
 
     private readonly AsyncSingleton _scriptInitializer;
 
+    private const string _modulePath = "Soenneker.Blazor.MediaQuery/mediaqueryinterop.js";
+    private const string _moduleName = "MediaQueryInterop";
+
     public MediaQueryInterop(IJSRuntime jSRuntime, IResourceLoader resourceLoader)
     {
         _jsRuntime = jSRuntime;
@@ -22,7 +25,7 @@ public sealed class MediaQueryInterop : IMediaQueryInterop
 
         _scriptInitializer = new AsyncSingleton(async (token, _) =>
         {
-            await _resourceLoader.ImportModuleAndWaitUntilAvailable("Soenneker.Blazor.MediaQuery/mediaqueryinterop.js", "MediaQueryInterop", 100, token);
+            await _resourceLoader.ImportModuleAndWaitUntilAvailable(_modulePath, _moduleName, 100, token);
             return new object();
         });
     }
@@ -36,24 +39,24 @@ public sealed class MediaQueryInterop : IMediaQueryInterop
     {
         await _scriptInitializer.Init(cancellationToken);
 
-        await _jsRuntime.InvokeVoidAsync("MediaQueryInterop.addMediaQueryListener", cancellationToken, dotnetObj, elementId, query);
+        await _jsRuntime.InvokeVoidAsync($"{_moduleName}.addMediaQueryListener", cancellationToken, dotnetObj, elementId, query);
     }
 
     public async ValueTask CreateObserver(string elementId, CancellationToken cancellationToken = default)
     {
-        await _jsRuntime.InvokeVoidAsync("MediaQueryInterop.createObserver", cancellationToken, elementId);
+        await _jsRuntime.InvokeVoidAsync($"{_moduleName}.createObserver", cancellationToken, elementId);
     }
 
     public async ValueTask<bool> IsMediaQueryMatched(string query, CancellationToken cancellationToken = default)
     {
         await _scriptInitializer.Init(cancellationToken);
 
-        return await _jsRuntime.InvokeAsync<bool>("MediaQueryInterop.isMediaQueryMatched", cancellationToken, query);
+        return await _jsRuntime.InvokeAsync<bool>($"{_moduleName}.isMediaQueryMatched", cancellationToken, query);
     }
 
     public async ValueTask DisposeAsync()
     {
-        await _resourceLoader.DisposeModule("Soenneker.Blazor.MediaQuery/mediaqueryinterop.js");
+        await _resourceLoader.DisposeModule(_modulePath);
 
         await _scriptInitializer.DisposeAsync();
     }

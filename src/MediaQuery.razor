@@ -3,6 +3,7 @@
 @using Soenneker.Blazor.MediaQuery.Abstract
 @using Soenneker.Extensions.String
 @using Soenneker.Extensions.CancellationTokens
+@using Soenneker.Extensions.ValueTask
 
 @inherits Soenneker.Quark.CoreCancellableElement
 @implements IMediaQuery
@@ -17,51 +18,58 @@
 
 @code {
 
-    [EditorRequired]
-    [Parameter]
+    [EditorRequired, Parameter]
     public string Query { get; set; } = null!;
 
     private bool _matches;
     private bool _previousMatches;
+    private bool _initializedInJs;
+    private bool _hasRendered;
 
     private DotNetObjectReference<MediaQuery>? _objRef;
 
     public MediaQuery()
     {
-        Id = '_' + Guid.NewGuid().ToString();
+        Id = '_' + Guid.NewGuid().ToString("N");
     }
 
-    protected override async Task OnInitializedAsync()
+    protected override Task OnInitializedAsync()
     {
         Query.ThrowIfNullOrWhiteSpace();
-
-        await MediaQueryInterop.Initialize(CancellationToken);
+        return Task.CompletedTask;
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if (firstRender)
-        {
-            _objRef = DotNetObjectReference.Create(this);
+        _hasRendered = true;
 
-            await MediaQueryInterop.Create(_objRef, Id!, Query, CancellationToken);
-            await MediaQueryInterop.CreateObserver(Id!, CancellationToken);
+        if (firstRender && !_initializedInJs)
+        {
+            try
+            {
+                _objRef = DotNetObjectReference.Create(this);
+
+                await MediaQueryInterop.Create(_objRef, Id!, Query, CancellationToken);
+                await MediaQueryInterop.CreateObserver(Id!, CancellationToken);
+
+                _initializedInJs = true;
+            }
+            catch (InvalidOperationException)
+            {
+                // Happens during prerender; when the circuit becomes interactive,
+                // we’ll get another render and try again.
+                _initializedInJs = false;
+                StateHasChanged();
+            }
         }
     }
 
     protected override bool ShouldRender()
     {
+        // Always allow the very first render; afterward only when match state changes.
+        if (!_hasRendered)
+            return true;
         return _matches != _previousMatches;
-    }
-
-    public async ValueTask<bool> IsMediaQueryMatched(string query, CancellationToken cancellationToken = default)
-    {
-        CancellationToken linked = CancellationToken.Link(cancellationToken, out CancellationTokenSource? cts);
-
-        using (cts)
-        {
-            return await MediaQueryInterop.IsMediaQueryMatched(query, linked);
-        }
     }
 
     [JSInvokable]
@@ -75,11 +83,20 @@
         StateHasChanged();
     }
 
+    public async ValueTask<bool> IsMediaQueryMatched(string query, CancellationToken cancellationToken = default)
+    {
+        CancellationToken linked = CancellationToken.Link(cancellationToken, out CancellationTokenSource? cts);
+
+        using (cts)
+        {
+            return await MediaQueryInterop.IsMediaQueryMatched(query, linked);
+        }
+    }
+
     public override async ValueTask DisposeAsync()
     {
-        await base.DisposeAsync();
-
         _objRef?.Dispose();
+        await base.DisposeAsync().NoSync();
     }
 
 }
