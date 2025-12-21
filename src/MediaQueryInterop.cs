@@ -2,7 +2,7 @@ using Soenneker.Blazor.MediaQuery.Abstract;
 using Microsoft.JSInterop;
 using System.Threading.Tasks;
 using Soenneker.Blazor.Utils.ResourceLoader.Abstract;
-using Soenneker.Utils.AsyncSingleton;
+using Soenneker.Asyncs.Initializers;
 using System.Threading;
 
 namespace Soenneker.Blazor.MediaQuery;
@@ -13,7 +13,7 @@ public sealed class MediaQueryInterop : IMediaQueryInterop
     private readonly IJSRuntime _jsRuntime;
     private readonly IResourceLoader _resourceLoader;
 
-    private readonly AsyncSingleton _scriptInitializer;
+    private readonly AsyncInitializer _scriptInitializer;
 
     private const string _modulePath = "Soenneker.Blazor.MediaQuery/mediaqueryinterop.js";
     private const string _moduleName = "MediaQueryInterop";
@@ -23,10 +23,9 @@ public sealed class MediaQueryInterop : IMediaQueryInterop
         _jsRuntime = jSRuntime;
         _resourceLoader = resourceLoader;
 
-        _scriptInitializer = new AsyncSingleton(async (token, _) =>
+        _scriptInitializer = new AsyncInitializer(async token =>
         {
             await _resourceLoader.ImportModuleAndWaitUntilAvailable(_modulePath, _moduleName, 100, token);
-            return new object();
         });
     }
 
