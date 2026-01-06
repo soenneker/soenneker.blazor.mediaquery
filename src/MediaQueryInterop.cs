@@ -42,9 +42,9 @@ public sealed class MediaQueryInterop : IMediaQueryInterop
         await _jsRuntime.InvokeVoidAsync("MediaQueryInterop.addMediaQueryListener", cancellationToken, dotnetObj, elementId, query);
     }
 
-    public async ValueTask CreateObserver(string elementId, CancellationToken cancellationToken = default)
+    public ValueTask CreateObserver(string elementId, CancellationToken cancellationToken = default)
     {
-        await _jsRuntime.InvokeVoidAsync("MediaQueryInterop.createObserver", cancellationToken, elementId);
+        return _jsRuntime.InvokeVoidAsync("MediaQueryInterop.createObserver", cancellationToken, elementId);
     }
 
     public async ValueTask<bool> IsMediaQueryMatched(string query, CancellationToken cancellationToken = default)
