@@ -8,7 +8,7 @@ namespace Soenneker.Blazor.MediaQuery.Abstract;
 /// <summary>
 /// A Blazor interop library for media queries for viewport size logic
 /// </summary>
-public interface IMediaQueryInterop : IAsyncDisposable
+public interface IMediaQueryInterop : IAsyncDisposable, IDisposable
 {
     ValueTask Initialize(CancellationToken cancellationToken = default);
 

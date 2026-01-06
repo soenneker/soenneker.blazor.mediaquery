@@ -22,11 +22,12 @@ public sealed class MediaQueryInterop : IMediaQueryInterop
     {
         _jsRuntime = jSRuntime;
         _resourceLoader = resourceLoader;
+        _scriptInitializer = new AsyncInitializer(InitializeScript);
+    }
 
-        _scriptInitializer = new AsyncInitializer(async token =>
-        {
-            await _resourceLoader.ImportModuleAndWaitUntilAvailable(_modulePath, _moduleName, 100, token);
-        });
+    private ValueTask InitializeScript(CancellationToken token)
+    {
+        return _resourceLoader.ImportModuleAndWaitUntilAvailable(_modulePath, _moduleName, 100, token);
     }
 
     public ValueTask Initialize(CancellationToken cancellationToken = default)
@@ -38,25 +39,30 @@ public sealed class MediaQueryInterop : IMediaQueryInterop
     {
         await _scriptInitializer.Init(cancellationToken);
 
-        await _jsRuntime.InvokeVoidAsync($"{_moduleName}.addMediaQueryListener", cancellationToken, dotnetObj, elementId, query);
+        await _jsRuntime.InvokeVoidAsync("MediaQueryInterop.addMediaQueryListener", cancellationToken, dotnetObj, elementId, query);
     }
 
     public async ValueTask CreateObserver(string elementId, CancellationToken cancellationToken = default)
     {
-        await _jsRuntime.InvokeVoidAsync($"{_moduleName}.createObserver", cancellationToken, elementId);
+        await _jsRuntime.InvokeVoidAsync("MediaQueryInterop.createObserver", cancellationToken, elementId);
     }
 
     public async ValueTask<bool> IsMediaQueryMatched(string query, CancellationToken cancellationToken = default)
     {
         await _scriptInitializer.Init(cancellationToken);
 
-        return await _jsRuntime.InvokeAsync<bool>($"{_moduleName}.isMediaQueryMatched", cancellationToken, query);
+        return await _jsRuntime.InvokeAsync<bool>("MediaQueryInterop.isMediaQueryMatched", cancellationToken, query);
     }
 
     public async ValueTask DisposeAsync()
     {
-        await _resourceLoader.DisposeModule(_modulePath);
-
+        await _resourceLoader.DisposeModule(_moduleName);
         await _scriptInitializer.DisposeAsync();
+    }
+
+    public void Dispose()
+    {
+        _resourceLoader.DisposeModule(_moduleName);
+        _scriptInitializer.Dispose();
     }
 }
