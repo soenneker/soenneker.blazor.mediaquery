@@ -34,12 +34,12 @@ public sealed class MediaQueryInterop : IMediaQueryInterop
         return _resourceLoader.ImportModuleAndWaitUntilAvailable(_modulePath, _moduleName, 100, token);
     }
 
-    public ValueTask Initialize(CancellationToken cancellationToken = default)
+    public async ValueTask Initialize(CancellationToken cancellationToken = default)
     {
         var linked = _cancellationScope.CancellationToken.Link(cancellationToken, out var source);
 
         using (source)
-            return _scriptInitializer.Init(linked);
+            await _scriptInitializer.Init(linked);
     }
 
     public async ValueTask Create(DotNetObjectReference<MediaQuery> dotnetObj, string elementId, string query, CancellationToken cancellationToken = default)
@@ -53,12 +53,12 @@ public sealed class MediaQueryInterop : IMediaQueryInterop
         }
     }
 
-    public ValueTask CreateObserver(string elementId, CancellationToken cancellationToken = default)
+    public async ValueTask CreateObserver(string elementId, CancellationToken cancellationToken = default)
     {
         var linked = _cancellationScope.CancellationToken.Link(cancellationToken, out var source);
 
         using (source)
-            return _jsRuntime.InvokeVoidAsync("MediaQueryInterop.createObserver", linked, elementId);
+            await _jsRuntime.InvokeVoidAsync("MediaQueryInterop.createObserver", linked, elementId);
     }
 
     public async ValueTask<bool> IsMediaQueryMatched(string query, CancellationToken cancellationToken = default)
