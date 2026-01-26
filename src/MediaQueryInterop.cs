@@ -4,6 +4,8 @@ using System.Threading.Tasks;
 using Soenneker.Blazor.Utils.ResourceLoader.Abstract;
 using Soenneker.Asyncs.Initializers;
 using System.Threading;
+using Soenneker.Extensions.CancellationTokens;
+using Soenneker.Utils.CancellationScopes;
 
 namespace Soenneker.Blazor.MediaQuery;
 
@@ -17,6 +19,8 @@ public sealed class MediaQueryInterop : IMediaQueryInterop
 
     private const string _modulePath = "Soenneker.Blazor.MediaQuery/mediaqueryinterop.js";
     private const string _moduleName = "MediaQueryInterop";
+
+    private readonly CancellationScope _cancellationScope = new();
 
     public MediaQueryInterop(IJSRuntime jSRuntime, IResourceLoader resourceLoader)
     {
@@ -32,37 +36,53 @@ public sealed class MediaQueryInterop : IMediaQueryInterop
 
     public ValueTask Initialize(CancellationToken cancellationToken = default)
     {
-        return _scriptInitializer.Init(cancellationToken);
+        var linked = _cancellationScope.CancellationToken.Link(cancellationToken, out var source);
+
+        using (source)
+            return _scriptInitializer.Init(linked);
     }
 
     public async ValueTask Create(DotNetObjectReference<MediaQuery> dotnetObj, string elementId, string query, CancellationToken cancellationToken = default)
     {
-        await _scriptInitializer.Init(cancellationToken);
+        var linked = _cancellationScope.CancellationToken.Link(cancellationToken, out var source);
 
-        await _jsRuntime.InvokeVoidAsync("MediaQueryInterop.addMediaQueryListener", cancellationToken, dotnetObj, elementId, query);
+        using (source)
+        {
+            await _scriptInitializer.Init(linked);
+            await _jsRuntime.InvokeVoidAsync("MediaQueryInterop.addMediaQueryListener", linked, dotnetObj, elementId, query);
+        }
     }
 
     public ValueTask CreateObserver(string elementId, CancellationToken cancellationToken = default)
     {
-        return _jsRuntime.InvokeVoidAsync("MediaQueryInterop.createObserver", cancellationToken, elementId);
+        var linked = _cancellationScope.CancellationToken.Link(cancellationToken, out var source);
+
+        using (source)
+            return _jsRuntime.InvokeVoidAsync("MediaQueryInterop.createObserver", linked, elementId);
     }
 
     public async ValueTask<bool> IsMediaQueryMatched(string query, CancellationToken cancellationToken = default)
     {
-        await _scriptInitializer.Init(cancellationToken);
+        var linked = _cancellationScope.CancellationToken.Link(cancellationToken, out var source);
 
-        return await _jsRuntime.InvokeAsync<bool>("MediaQueryInterop.isMediaQueryMatched", cancellationToken, query);
+        using (source)
+        {
+            await _scriptInitializer.Init(linked);
+            return await _jsRuntime.InvokeAsync<bool>("MediaQueryInterop.isMediaQueryMatched", linked, query);
+        }
     }
 
     public async ValueTask DisposeAsync()
     {
         await _resourceLoader.DisposeModule(_moduleName);
         await _scriptInitializer.DisposeAsync();
+        await _cancellationScope.DisposeAsync();
     }
 
     public void Dispose()
     {
         _resourceLoader.DisposeModule(_moduleName);
         _scriptInitializer.Dispose();
+        _cancellationScope.DisposeAsync().GetAwaiter().GetResult();
     }
 }
