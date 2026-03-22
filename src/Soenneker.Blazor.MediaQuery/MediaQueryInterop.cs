@@ -29,9 +29,9 @@ public sealed class MediaQueryInterop : IMediaQueryInterop
         _scriptInitializer = new AsyncInitializer(InitializeScript);
     }
 
-    private ValueTask InitializeScript(CancellationToken token)
+    private async ValueTask InitializeScript(CancellationToken token)
     {
-        return _resourceLoader.ImportModuleAndWaitUntilAvailable(_modulePath, _moduleName, 100, token);
+        _ = await _resourceLoader.ImportModule(_modulePath, token);
     }
 
     public async ValueTask Initialize(CancellationToken cancellationToken = default)
