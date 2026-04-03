@@ -1,3 +1,4 @@
+using Soenneker.Quark;
 using System;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -32,6 +33,7 @@ public class Program
             });
 
             builder.Services.AddMediaQueryInteropAsScoped();
+            builder.Services.AddQuarkSuiteAsScoped();
 
             WebAssemblyHost host = builder.Build();
 
@@ -78,3 +80,5 @@ public class Program
         Log.Logger = loggerConfig.CreateLogger();
     }
 }
+
+
