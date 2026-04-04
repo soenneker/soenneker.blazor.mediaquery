@@ -11,6 +11,7 @@ using Serilog;
 using Serilog.Debugging;
 using Serilog.Events;
 using Soenneker.Blazor.MediaQuery.Registrars;
+using Soenneker.Quark.Gen.Lucide.Generated;
 
 namespace Soenneker.Blazor.MediaQuery.Demo;
 
@@ -34,6 +35,7 @@ public class Program
 
             builder.Services.AddMediaQueryInteropAsScoped();
             builder.Services.AddQuarkSuiteAsScoped();
+            builder.Services.AddLucideIconsAsScoped();
 
             WebAssemblyHost host = builder.Build();
 

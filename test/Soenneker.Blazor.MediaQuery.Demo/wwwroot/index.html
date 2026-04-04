@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="en" >
+<html lang="en">
 
-    <head>
-        <meta charset="utf-8" />
+<head>
+    <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Soenneker.Blazor.MediaQuery.Demo</title>
-        <base href="/" />
+    <title>Soenneker.Blazor.MediaQuery.Demo</title>
+    <base href="%BASE_URL%" />
     <link href="css/quark-tailwind.min.css" rel="stylesheet" />
     <script>
         (() => {
@@ -20,20 +20,19 @@
             document.documentElement.classList.toggle("dark", resolvedTheme === "dark");
         })();
     </script>
-        <link href="css/app.css" rel="stylesheet" />
+    <link href="css/app.css" rel="stylesheet" />
+</head>
 
-    </head>
+<body>
+    <div id="app">Loading...</div>
 
-    <body>
-        <div id="app">Loading...</div>
+    <div id="blazor-error-ui">
+        An unhandled error has occurred.
+        <a href="" class="reload">Reload</a>
+        <a class="dismiss">🗙</a>
+    </div>
 
-        <div id="blazor-error-ui">
-            An unhandled error has occurred.
-            <a href="" class="reload">Reload</a>
-            <a class="dismiss">🗙</a>
-        </div>
-
-        <script src="_framework/blazor.webassembly.js"></script>
-    </body>
+    <script src="_framework/blazor.webassembly.js"></script>
+</body>
 
 </html>
