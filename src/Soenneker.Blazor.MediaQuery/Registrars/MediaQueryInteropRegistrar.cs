@@ -1,7 +1,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Soenneker.Blazor.MediaQuery.Abstract;
-using Soenneker.Blazor.Utils.ResourceLoader.Registrars;
+using Soenneker.Blazor.Utils.ModuleImport.Registrars;
 
 namespace Soenneker.Blazor.MediaQuery.Registrars;
 
@@ -15,7 +15,7 @@ public static class MediaQueryInteropRegistrar
     /// </summary>
     public static IServiceCollection AddMediaQueryInteropAsScoped(this IServiceCollection services)
     {
-        services.AddResourceLoaderAsScoped().TryAddScoped<IMediaQueryInterop, MediaQueryInterop>();
+        services.AddModuleImportUtilAsScoped().TryAddScoped<IMediaQueryInterop, MediaQueryInterop>();
 
         return services;
     }

@@ -1,9 +1,9 @@
-export class MediaQueryInterop {
+const mediaQueryInterop = {
     /** Map<string elementId, { listeners: Array<{ mql: MediaQueryList, handler: Function, query: string }> }> */
-    listeners = new Map();
+    listeners: new Map(),
 
     /** Map<string elementId, MutationObserver> */
-    observers = new Map();
+    observers: new Map(),
 
     addMediaQueryListener(dotNetHelper, elementId, query) {
         const mql = window.matchMedia(query);
@@ -38,7 +38,7 @@ export class MediaQueryInterop {
         try {
             dotNetHelper.invokeMethodAsync('UpdateMatches', mql.matches);
         } catch { /* ignore */ }
-    }
+    },
 
     removeMediaQueryListener(elementId) {
         const entry = this.listeners.get(elementId);
@@ -57,11 +57,11 @@ export class MediaQueryInterop {
             try { obs.disconnect(); } catch { /* ignore */ }
             this.observers.delete(elementId);
         }
-    }
+    },
 
     isMediaQueryMatched(query) {
         return window.matchMedia(query).matches;
-    }
+    },
 
     createObserver(elementId) {
         if (this.observers.has(elementId)) return; // already observing
@@ -88,12 +88,26 @@ export class MediaQueryInterop {
         } catch {
             // Parent may vanish during navigation; just ignore.
         }
-    }
+    },
 
     /** Explicit tear-down you can call from DisposeAsync on the .NET side */
     destroy(elementId) {
         this.removeMediaQueryListener(elementId);
     }
+};
+
+export function addMediaQueryListener(dotNetHelper, elementId, query) {
+    return mediaQueryInterop.addMediaQueryListener(dotNetHelper, elementId, query);
 }
 
-window.MediaQueryInterop = new MediaQueryInterop();
+export function createObserver(elementId) {
+    return mediaQueryInterop.createObserver(elementId);
+}
+
+export function isMediaQueryMatched(query) {
+    return mediaQueryInterop.isMediaQueryMatched(query);
+}
+
+export function destroy(elementId) {
+    return mediaQueryInterop.destroy(elementId);
+}
