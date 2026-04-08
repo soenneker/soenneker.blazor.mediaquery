@@ -68,10 +68,4 @@ public sealed class MediaQueryInterop : IMediaQueryInterop
         await _moduleImportUtil.DisposeContentModule(_modulePath);
         await _cancellationScope.DisposeAsync();
     }
-
-    public void Dispose()
-    {
-        _moduleImportUtil.DisposeContentModule(_modulePath).GetAwaiter().GetResult();
-        _cancellationScope.DisposeAsync().GetAwaiter().GetResult();
-    }
 }
