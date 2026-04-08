@@ -13,7 +13,7 @@ public sealed class MediaQueryInterop : IMediaQueryInterop
 {
     private readonly IModuleImportUtil _moduleImportUtil;
 
-    private const string _modulePath = "/_content/Soenneker.Blazor.MediaQuery/mediaqueryinterop.js";
+    private const string _modulePath = "_content/Soenneker.Blazor.MediaQuery/mediaqueryinterop.js";
 
     private readonly CancellationScope _cancellationScope = new();
 
