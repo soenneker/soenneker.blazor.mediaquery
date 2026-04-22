@@ -1,21 +1,19 @@
 using Soenneker.Blazor.MediaQuery.Abstract;
-using Soenneker.Tests.FixturedUnit;
-using Xunit;
-
+using Soenneker.Tests.HostedUnit;
 
 namespace Soenneker.Blazor.MediaQuery.Tests;
 
-[Collection("Collection")]
-public class MediaQueryInteropTests : FixturedUnitTest
+[ClassDataSource<Host>(Shared = SharedType.PerTestSession)]
+public class MediaQueryInteropTests : HostedUnitTest
 {
     private readonly IMediaQueryInterop _util;
 
-    public MediaQueryInteropTests(Fixture fixture, ITestOutputHelper output) : base(fixture, output)
+    public MediaQueryInteropTests(Host host) : base(host)
     {
         _util = Resolve<IMediaQueryInterop>(true);
     }
 
-    [Fact]
+    [Test]
     public void Default()
     {
 
