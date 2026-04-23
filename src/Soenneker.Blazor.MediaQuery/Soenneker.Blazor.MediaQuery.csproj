@@ -47,6 +47,6 @@
         <PackageReference Include="Soenneker.Blazor.Utils.Ids" Version="4.0.7" />
         <PackageReference Include="Soenneker.Blazor.Utils.ModuleImport" Version="4.0.1802" />
         <PackageReference Include="Soenneker.Extensions.String" Version="4.0.673" />
-        <PackageReference Include="Soenneker.Quark.Components.Core.Cancellable" Version="4.0.69" />
+        <PackageReference Include="Soenneker.Quark.Components.Core.Cancellable" Version="4.0.70" />
     </ItemGroup>
 </Project>
