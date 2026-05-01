@@ -1,10 +1,10 @@
 using System.Threading;
 using System.Threading.Tasks;
-using Soenneker.Quark;
+using Soenneker.Lepton.Suite.Abstract;
 
 namespace Soenneker.Blazor.MediaQuery.Abstract;
 
-public interface IMediaQuery : ICoreCancellableElement
+public interface IMediaQuery : ILeptonCancellableIdentifiableContentElement
 {
     /// <summary>
     /// Asynchronously checks if the specified media query matches the current viewport.
