@@ -4,6 +4,9 @@ using Soenneker.Lepton.Suite.Abstract;
 
 namespace Soenneker.Blazor.MediaQuery.Abstract;
 
+/// <summary>
+/// Defines the media query contract.
+/// </summary>
 public interface IMediaQuery : ILeptonCancellableIdentifiableContentElement
 {
     /// <summary>
