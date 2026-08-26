@@ -45,7 +45,7 @@
 
     <ItemGroup>
         <PackageReference Include="Soenneker.Blazor.Utils.Ids" Version="4.0.21" />
-        <PackageReference Include="Soenneker.Blazor.Utils.ModuleImport" Version="4.0.1856" />
+        <PackageReference Include="Soenneker.Blazor.Utils.ModuleImport" Version="4.0.1857" />
 <PackageReference Include="Soenneker.Lepton.Suite" Version="4.0.54" />
     </ItemGroup>
 </Project>
