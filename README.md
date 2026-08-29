@@ -3,28 +3,45 @@
 [![](https://img.shields.io/nuget/dt/soenneker.blazor.mediaquery.svg?style=for-the-badge)](https://www.nuget.org/packages/soenneker.blazor.mediaquery/)
 [![](https://img.shields.io/github/actions/workflow/status/soenneker/soenneker.blazor.mediaquery/codeql.yml?label=CodeQL&style=for-the-badge)](https://github.com/soenneker/soenneker.blazor.mediaquery/actions/workflows/codeql.yml)
 
-# ![](https://user-images.githubusercontent.com/4441470/224455560-91ed3ee7-f510-4041-a8d2-3fc093025112.png) Soenneker.Blazor.MediaQuery
-### A Blazor interop library for media queries and viewport size logic
+# Soenneker.Blazor.MediaQuery
 
-## Installation
+Defines the media query contract.
 
-```
+## Install
+
+```bash
 dotnet add package Soenneker.Blazor.MediaQuery
 ```
 
-### Register with `IServiceCollection`:
+## Quick start
 
 ```csharp
-public void ConfigureServices(IServiceCollection services)
-{
-    services.AddMediaQueryInteropAsScoped();
-}
+using Soenneker.Blazor.MediaQuery.Registrars;
+using Microsoft.Extensions.DependencyInjection;
+
+var services = new ServiceCollection();
+var result = services.AddMediaQueryInteropAsScoped();
 ```
 
-## Usage
+Adds `IMediaQuery` as a scoped service.
 
-```razor
-<MediaQuery Query="(min-width: 768px)"> // Supports standard CSS media queries
-    This is visible at widths greater than 768px
-</MediaQuery>
-```
+## What you get
+
+- `IMediaQuery` — Defines the media query contract.
+- `IMediaQueryInterop` — A Blazor interop library for media queries for viewport size logic.
+- `MediaQueryInteropRegistrar` — A Blazor interop library for media queries for viewport size logic.
+
+## API at a glance
+
+| API | What it does | Result / important behavior |
+| --- | --- | --- |
+| `IMediaQuery.IsMediaQueryMatched(query, cancellationToken)` | Asynchronously checks if the specified media query matches the current viewport. | true if asynchronously checks if the specified media query matches the current viewport; otherwise, false. |
+| `IMediaQueryInterop.Initialize(cancellationToken)` | Initializes the media query so it is ready for use. | A task that completes when the media query is ready for use. |
+| `IMediaQueryInterop.Create(dotnetObj, elementId, query, cancellationToken)` | Creates a media query instance from the supplied inputs. | A task that completes when the create operation is complete. |
+| `IMediaQueryInterop.IsMediaQueryMatched(query, cancellationToken)` | Determines whether the media query media Query Matched. | true if the media query media Query Matched; otherwise, false. |
+| `MediaQueryInteropRegistrar.AddMediaQueryInteropAsScoped(services)` | Adds `IMediaQuery` as a scoped service. | The same service collection, so additional registrations can be chained. |
+
+## Practical notes
+
+- Cancellation stops pending work; it does not undo work that has already completed.
+- Dispose instances you own when their scope ends so held resources can be released.
