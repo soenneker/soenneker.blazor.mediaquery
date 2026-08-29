@@ -12,9 +12,8 @@ public interface IMediaQuery : ILeptonCancellableIdentifiableContentElement
     /// <summary>
     /// Asynchronously checks if the specified media query matches the current viewport.
     /// </summary>
-    /// <param name="query">The media query string to evaluate.</param>
-    /// <param name="cancellationToken"></param>
-    /// <returns>A task that represents the asynchronous operation, containing a boolean value
-    /// indicating whether the media query matches.</returns>
+    /// <param name="query">CSS media-query expression to evaluate against the current viewport.</param>
+    /// <param name="cancellationToken">Token used to cancel the operation.</param>
+    /// <returns>true if asynchronously checks if the specified media query matches the current viewport; otherwise, false.</returns>
     ValueTask<bool> IsMediaQueryMatched(string query, CancellationToken cancellationToken = default);
 }

@@ -11,35 +11,35 @@ namespace Soenneker.Blazor.MediaQuery.Abstract;
 public interface IMediaQueryInterop : IAsyncDisposable
 {
     /// <summary>
-    /// Executes the initialize operation.
+    /// Initializes the media query so it is ready for use.
     /// </summary>
-    /// <param name="cancellationToken">The cancellation token.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <param name="cancellationToken">Token used to cancel the operation.</param>
+    /// <returns>A task that completes when the media query is ready for use.</returns>
     ValueTask Initialize(CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// Executes the create operation.
+    /// Creates a media query instance from the supplied inputs.
     /// </summary>
-    /// <param name="dotnetObj">The dotnet obj.</param>
-    /// <param name="elementId">The element id.</param>
-    /// <param name="query">The query.</param>
-    /// <param name="cancellationToken">The cancellation token.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <param name="dotnetObj">Dotnet Obj for the create operation.</param>
+    /// <param name="elementId">ID of the DOM element to target.</param>
+    /// <param name="query">CSS media-query expression to evaluate against the current viewport.</param>
+    /// <param name="cancellationToken">Token used to cancel the operation.</param>
+    /// <returns>A task that completes when the create operation is complete.</returns>
     ValueTask Create(DotNetObjectReference<MediaQuery> dotnetObj, string elementId, string query, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Creates observer.
     /// </summary>
-    /// <param name="elementId">The element id.</param>
-    /// <param name="cancellationToken">The cancellation token.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
+    /// <param name="elementId">ID of the DOM element to target.</param>
+    /// <param name="cancellationToken">Token used to cancel the operation.</param>
+    /// <returns>A task that completes when the observer creation is complete.</returns>
     ValueTask CreateObserver(string elementId, CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// Executes the is media query matched operation.
+    /// Determines whether the media query media Query Matched.
     /// </summary>
-    /// <param name="query">The query.</param>
-    /// <param name="cancellationToken">The cancellation token.</param>
-    /// <returns>A task containing the result of the operation.</returns>
+    /// <param name="query">CSS media-query expression to evaluate against the current viewport.</param>
+    /// <param name="cancellationToken">Token used to cancel the operation.</param>
+    /// <returns>true if the media query media Query Matched; otherwise, false.</returns>
     ValueTask<bool> IsMediaQueryMatched(string query, CancellationToken cancellationToken = default);
 }
