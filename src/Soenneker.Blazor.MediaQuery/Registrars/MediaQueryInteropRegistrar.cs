@@ -11,7 +11,7 @@ namespace Soenneker.Blazor.MediaQuery.Registrars;
 public static class MediaQueryInteropRegistrar
 {
     /// <summary>
-    /// Adds <see cref="IMediaQuery"/> as a scoped service. <para/>
+    /// Adds <see cref="IMediaQueryInterop"/> as a scoped service. <para/>
     /// </summary>
     /// <param name="services">Service collection that receives the registration.</param>
     /// <returns>The same service collection, so additional registrations can be chained.</returns>

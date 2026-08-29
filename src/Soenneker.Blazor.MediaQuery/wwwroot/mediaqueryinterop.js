@@ -9,11 +9,7 @@ const mediaQueryInterop = {
         const mql = window.matchMedia(query);
 
         const handler = (event) => {
-            try {
-                dotNetHelper.invokeMethodAsync('UpdateMatches', event.matches);
-            } catch {
-                // If circuit is gone, swallow; cleanup will happen via remove/destroy.
-            }
+            dotNetHelper.invokeMethodAsync('UpdateMatches', event.matches).catch(() => {});
         };
 
         // init bucket
@@ -35,9 +31,7 @@ const mediaQueryInterop = {
         this.listeners.get(elementId).listeners.push({ mql, handler, query });
 
         // push initial state
-        try {
-            dotNetHelper.invokeMethodAsync('UpdateMatches', mql.matches);
-        } catch { /* ignore */ }
+        dotNetHelper.invokeMethodAsync('UpdateMatches', mql.matches).catch(() => {});
     },
 
     removeMediaQueryListener(elementId) {

@@ -5,43 +5,66 @@
 
 # Soenneker.Blazor.MediaQuery
 
-Defines the media query contract.
+A Blazor component that conditionally renders content from a browser CSS media query, plus an interop service for one-time `matchMedia` checks.
 
-## Install
+## Installation
 
 ```bash
 dotnet add package Soenneker.Blazor.MediaQuery
 ```
 
-## Quick start
-
 ```csharp
 using Soenneker.Blazor.MediaQuery.Registrars;
-using Microsoft.Extensions.DependencyInjection;
 
-var services = new ServiceCollection();
-var result = services.AddMediaQueryInteropAsScoped();
+builder.Services.AddMediaQueryInteropAsScoped();
 ```
 
-Adds `IMediaQuery` as a scoped service.
+Add the component namespace to `_Imports.razor`:
 
-## What you get
+```razor
+@using Soenneker.Blazor.MediaQuery
+```
 
-- `IMediaQuery` — Defines the media query contract.
-- `IMediaQueryInterop` — A Blazor interop library for media queries for viewport size logic.
-- `MediaQueryInteropRegistrar` — A Blazor interop library for media queries for viewport size logic.
+## Conditional content
 
-## API at a glance
+```razor
+<MediaQuery Query="(min-width: 768px)">
+    <nav aria-label="Desktop navigation">
+        ...
+    </nav>
+</MediaQuery>
 
-| API | What it does | Result / important behavior |
-| --- | --- | --- |
-| `IMediaQuery.IsMediaQueryMatched(query, cancellationToken)` | Asynchronously checks if the specified media query matches the current viewport. | true if asynchronously checks if the specified media query matches the current viewport; otherwise, false. |
-| `IMediaQueryInterop.Initialize(cancellationToken)` | Initializes the media query so it is ready for use. | A task that completes when the media query is ready for use. |
-| `IMediaQueryInterop.Create(dotnetObj, elementId, query, cancellationToken)` | Creates a media query instance from the supplied inputs. | A task that completes when the create operation is complete. |
-| `IMediaQueryInterop.IsMediaQueryMatched(query, cancellationToken)` | Determines whether the media query media Query Matched. | true if the media query media Query Matched; otherwise, false. |
-| `MediaQueryInteropRegistrar.AddMediaQueryInteropAsScoped(services)` | Adds `IMediaQuery` as a scoped service. | The same service collection, so additional registrations can be chained. |
+<MediaQuery Query="(prefers-reduced-motion: reduce)">
+    <p>Animations are disabled.</p>
+</MediaQuery>
+```
 
-## Practical notes
+`Query` accepts any expression supported by `window.matchMedia`, including viewport, orientation, pointer, color-scheme, and reduced-motion queries. It is required and cannot be blank.
 
-- Cancellation stops pending work; it does not undo work that has already completed.
-- Dispose instances you own when their scope ends so held resources can be released.
+The component initially renders its wrapper with no child content, then updates after browser interop reports the first match. This avoids guessing browser state during server prerendering but can cause content to appear after hydration. Do not use it as the only authorization or data-access control; it changes rendering based on client presentation state.
+
+The listener remains active, so the content updates when the query result changes. Changing `Query` replaces the old listener. Component disposal removes both the browser listener and its DOM observer.
+
+## One-time check
+
+Inject `IMediaQueryInterop` when code needs the current result without rendering the component:
+
+```razor
+@using Soenneker.Blazor.MediaQuery.Abstract
+@inject IMediaQueryInterop MediaQueries
+
+@code {
+    private bool _usesCoarsePointer;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!firstRender)
+            return;
+
+        _usesCoarsePointer = await MediaQueries.IsMediaQueryMatched("(pointer: coarse)");
+        StateHasChanged();
+    }
+}
+```
+
+The one-time method does not subscribe to changes. Call it only after JavaScript interop is available; use the component when ongoing updates are required.

@@ -63,6 +63,17 @@ public sealed class MediaQueryInterop : IMediaQueryInterop
         }
     }
 
+    public async ValueTask Destroy(string elementId, CancellationToken cancellationToken = default)
+    {
+        CancellationToken linked = _cancellationScope.CancellationToken.Link(cancellationToken, out CancellationTokenSource? source);
+
+        using (source)
+        {
+            IJSObjectReference module = await _moduleImportUtil.GetContentModuleReference(_modulePath, linked);
+            await module.InvokeVoidAsync("destroy", linked, elementId);
+        }
+    }
+
     /// <summary>
     /// Asynchronously releases resources used by the current instance.
     /// </summary>

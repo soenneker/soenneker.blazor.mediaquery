@@ -36,6 +36,14 @@ public interface IMediaQueryInterop : IAsyncDisposable
     ValueTask CreateObserver(string elementId, CancellationToken cancellationToken = default);
 
     /// <summary>
+    /// Removes the media-query listener and its DOM observer.
+    /// </summary>
+    /// <param name="elementId">ID of the DOM element to tear down.</param>
+    /// <param name="cancellationToken">Token used to cancel the operation.</param>
+    /// <returns>A task that completes when teardown is complete.</returns>
+    ValueTask Destroy(string elementId, CancellationToken cancellationToken = default);
+
+    /// <summary>
     /// Determines whether the media query media Query Matched.
     /// </summary>
     /// <param name="query">CSS media-query expression to evaluate against the current viewport.</param>
