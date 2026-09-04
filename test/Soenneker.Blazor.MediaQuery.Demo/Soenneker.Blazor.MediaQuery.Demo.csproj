@@ -10,7 +10,7 @@
 
     <ItemGroup>
 <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="10.0.11" PrivateAssets="all" />
-        <PackageReference Include="Soenneker.Quark.Gen.Lucide" Version="4.0.221">
+        <PackageReference Include="Soenneker.Quark.Gen.Lucide" Version="4.0.222">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
@@ -22,7 +22,7 @@
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="Soenneker.Quark.Suite" Version="4.0.1324" />
+        <PackageReference Include="Soenneker.Quark.Suite" Version="4.0.1325" />
         <PackageReference Include="Serilog.Extensions.Logging" Version="10.0.0" />
         <PackageReference Include="Serilog.Sinks.BrowserConsole" Version="8.0.0" />
     </ItemGroup>
