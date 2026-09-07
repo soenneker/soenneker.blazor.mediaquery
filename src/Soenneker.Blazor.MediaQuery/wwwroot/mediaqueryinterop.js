@@ -66,7 +66,7 @@ const mediaQueryInterop = {
         const obs = new MutationObserver((mutations) => {
             // If the target node disappears anywhere in the observed subtree, clean up.
             const removed = mutations.some(m =>
-                Array.from(m.removedNodes).includes(target) ||
+                Array.prototype.includes.call(m.removedNodes, target) ||
                 // also handle wholesale subtree replacements:
                 (target.isConnected === false)
             );
