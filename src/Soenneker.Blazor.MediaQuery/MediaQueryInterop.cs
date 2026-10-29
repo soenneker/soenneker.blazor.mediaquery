@@ -1,5 +1,6 @@
 using Soenneker.Blazor.MediaQuery.Abstract;
 using Microsoft.JSInterop;
+using Soenneker.Blazor.Extensions.IJSObjectReferences;
 using System.Threading.Tasks;
 using Soenneker.Blazor.Utils.ModuleImport.Abstract;
 using System.Threading;
@@ -36,15 +37,8 @@ public sealed class MediaQueryInterop : IMediaQueryInterop
 
         using (source)
         {
-            try
-            {
-                IJSObjectReference module = await _moduleImportUtil.GetContentModuleReference(_modulePath, linked);
-                await module.InvokeVoidAsync("addMediaQueryListener", linked, dotnetObj, elementId, query);
-            }
-            catch (JSException exception)
-            {
-                throw new JSException($"JavaScript operation 'MediaQueryInterop.Create' failed: {exception.Message}", exception);
-            }
+            IJSObjectReference module = await _moduleImportUtil.GetContentModuleReference(_modulePath, linked);
+            await module.InvokeVoidWithContextAsync("addMediaQueryListener", linked, dotnetObj, elementId, query);
         }
     }
 
@@ -54,15 +48,8 @@ public sealed class MediaQueryInterop : IMediaQueryInterop
 
         using (source)
         {
-            try
-            {
-                IJSObjectReference module = await _moduleImportUtil.GetContentModuleReference(_modulePath, linked);
-                await module.InvokeVoidAsync("createObserver", linked, elementId);
-            }
-            catch (JSException exception)
-            {
-                throw new JSException($"JavaScript operation 'MediaQueryInterop.CreateObserver' failed: {exception.Message}", exception);
-            }
+            IJSObjectReference module = await _moduleImportUtil.GetContentModuleReference(_modulePath, linked);
+            await module.InvokeVoidWithContextAsync("createObserver", linked, elementId);
         }
     }
 
@@ -72,15 +59,8 @@ public sealed class MediaQueryInterop : IMediaQueryInterop
 
         using (source)
         {
-            try
-            {
-                IJSObjectReference module = await _moduleImportUtil.GetContentModuleReference(_modulePath, linked);
-                return await module.InvokeAsync<bool>("isMediaQueryMatched", linked, query);
-            }
-            catch (JSException exception)
-            {
-                throw new JSException($"JavaScript operation 'MediaQueryInterop.IsMediaQueryMatched' failed: {exception.Message}", exception);
-            }
+            IJSObjectReference module = await _moduleImportUtil.GetContentModuleReference(_modulePath, linked);
+            return await module.InvokeWithContextAsync<bool>("isMediaQueryMatched", linked, query);
         }
     }
 
@@ -90,15 +70,8 @@ public sealed class MediaQueryInterop : IMediaQueryInterop
 
         using (source)
         {
-            try
-            {
-                IJSObjectReference module = await _moduleImportUtil.GetContentModuleReference(_modulePath, linked);
-                await module.InvokeVoidAsync("destroy", linked, elementId);
-            }
-            catch (JSException exception)
-            {
-                throw new JSException($"JavaScript operation 'MediaQueryInterop.Destroy' failed: {exception.Message}", exception);
-            }
+            IJSObjectReference module = await _moduleImportUtil.GetContentModuleReference(_modulePath, linked);
+            await module.InvokeVoidWithContextAsync("destroy", linked, elementId);
         }
     }
 
