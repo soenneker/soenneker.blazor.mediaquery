@@ -49,7 +49,7 @@
     <ItemGroup>
         <PackageReference Include="Soenneker.Blazor.Utils.Ids" Version="11.0.64" />
         <PackageReference Include="Soenneker.Blazor.Utils.ModuleImport" Version="11.0.1944" />
-<PackageReference Include="Soenneker.Lepton.Suite" Version="11.0.141" />
+<PackageReference Include="Soenneker.Lepton.Suite" Version="11.0.142" />
     </ItemGroup>
     <ItemGroup>
         <PackageReference Include="Soenneker.Blazor.Extensions.IJSObjectReferences" Version="11.0.6" />
